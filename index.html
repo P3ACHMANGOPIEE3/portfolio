@@ -629,7 +629,7 @@
         </div>
     </section>
 
-    <!-- 7. CONTACT SECTION (FIXED FACEBOOK SVG & WORKING EMAIL SENDER) -->
+    <!-- 7. CONTACT SECTION -->
     <section id="contact" class="py-24 max-w-[1550px] mx-auto px-4 md:px-8 border-t border-white/10">
         <div class="bg-gradient-to-b from-[#130602] via-[#0b0401] to-[#050201] rounded-[2.5rem] p-8 md:p-14 border border-white/10 shadow-2xl relative overflow-hidden">
             
@@ -649,13 +649,13 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
                 
                 <!-- Channel 1: Email -->
-                <a href="mailto:jerome.opana@email.com" class="p-5 rounded-2xl bg-black/60 border border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 transition duration-300 group flex items-center gap-4">
+                <a href="mailto:jxrome.opana21@gmail.com" class="p-5 rounded-2xl bg-black/60 border border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 transition duration-300 group flex items-center gap-4">
                     <div class="p-3 rounded-xl bg-orange-500/15 border border-orange-500/30 text-orange-400 group-hover:scale-110 transition">
                         <i data-lucide="mail" class="w-5 h-5"></i>
                     </div>
                     <div class="overflow-hidden">
                         <p class="text-[10px] font-mono-custom text-gray-400 uppercase tracking-wider">PRIMARY EMAIL</p>
-                        <p class="text-xs font-bold text-white group-hover:text-orange-400 transition truncate">jerome.opana@email.com</p>
+                        <p class="text-xs font-bold text-white group-hover:text-orange-400 transition truncate">jxrome.opana21@gmail.com</p>
                     </div>
                 </a>
 
@@ -683,7 +683,7 @@
                     </div>
                 </a>
 
-                <!-- Channel 4: Facebook (FIXED HIGH-RES SVG ICON) -->
+                <!-- Channel 4: Facebook -->
                 <a href="https://www.facebook.com/romejernzxc/" target="_blank" class="p-5 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10 transition duration-300 group flex items-center gap-4">
                     <div class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 group-hover:scale-110 transition">
                         <svg class="w-5 h-5 fill-current text-amber-400" viewBox="0 0 24 24">
@@ -698,7 +698,7 @@
 
             </div>
 
-            <!-- BOTTOM SINGLE-BOX INTERACTIVE MESSAGE CONSOLE (SENDS DIRECTLY TO EMAIL) -->
+            <!-- BOTTOM SINGLE-BOX INTERACTIVE MESSAGE CONSOLE -->
             <div class="bg-black/60 border border-white/10 p-8 rounded-3xl" data-aos="fade-up">
                 <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                     <h3 class="text-2xl font-bold font-space text-white">Send Direct Inquiry</h3>
@@ -757,14 +757,14 @@
             document.getElementById('comingSoonModal').classList.add('hidden');
         }
 
-        // DIRECT EMAIL SENDER FUNCTION
+        // DIRECT EMAIL SENDER FUNCTION TO CORRECT ADDRESS
         function sendEmail(event) {
             event.preventDefault();
             const name = document.getElementById('senderName').value;
             const email = document.getElementById('senderEmail').value;
             const message = document.getElementById('senderMessage').value;
 
-            const mailtoLink = `mailto:jerome.opana@email.com?subject=Portfolio Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent("Sender Name: " + name + "\nSender Email: " + email + "\n\nMessage:\n" + message)}`;
+            const mailtoLink = `mailto:jxrome.opana21@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent("Sender Name: " + name + "\nSender Email: " + email + "\n\nMessage:\n" + message)}`;
             
             window.location.href = mailtoLink;
         }
