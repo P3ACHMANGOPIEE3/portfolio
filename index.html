@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jerome Opana | Computer Engineering Portfolio</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Vanilla Tilt JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: none;
+            background-color: #060302;
+        }
+        .font-space {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .font-mono-custom {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Mouse Pointer Dot */
+        #custom-cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #f97316;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ea580c, 0 0 20px #ea580c;
+        }
+
+        /* 3D FLIP CARD STYLES FOR PROJECTS */
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-[#060302] text-white antialiased selection:bg-orange-500 selection:text-white overflow-x-hidden relative">
+
+    <!-- CANVAS PARA SA DYNAMIC SMOKE TRAIL -->
+    <canvas id="smokeCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50 opacity-80"></canvas>
+    
+    <!-- CURSOR DOT -->
+    <div id="custom-cursor-dot"></div>
+
+    <!-- COMING SOON MODAL FOR COEPay -->
+    <div id="comingSoonModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] hidden flex items-center justify-center p-4">
+        <div class="bg-[#120603] border-2 border-orange-500/60 rounded-3xl p-8 max-w-md w-full text-center relative shadow-2xl animate-fade-in">
+            <div class="w-16 h-16 bg-orange-500/20 text-orange-400 rounded-2xl border border-orange-500/40 flex items-center justify-center mx-auto mb-5">
+                <i data-lucide="clock" class="w-8 h-8"></i>
+            </div>
+            <span class="text-xs font-mono-custom text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">UNDER DEVELOPMENT</span>
+            <h3 class="text-2xl font-bold font-space text-white mt-3 mb-2">COEPay is Coming Soon!</h3>
+            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                This project is currently under active development and testing. The live portal will be launched soon!
+            </p>
+            <button onclick="closeComingSoonModal()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3.5 rounded-xl hover:scale-[1.02] transition duration-300 shadow-lg shadow-orange-500/30">
+                Got it, thanks!
+            </button>
+        </div>
+    </div>
+
+    <!-- 1. NAVIGATION BAR -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-[#060302]/85 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-[1500px] mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="#" class="text-2xl font-black tracking-wider font-space hover:scale-105 transition transform">
+                    JEROME<span class="text-orange-500 animate-pulse">.</span>
+                </a>
+            </div>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-300">
+                <a href="#home" class="hover:text-orange-500 transition">Home</a>
+                <a href="#about" class="hover:text-orange-500 transition">About</a>
+                <a href="#skills" class="hover:text-orange-500 transition">Skills</a>
+                <a href="#projects" class="hover:text-orange-500 transition">Projects</a>
+                <a href="#education" class="hover:text-orange-500 transition">Education</a>
+                <a href="#contact" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 font-bold text-white shadow-lg shadow-orange-500/30 hover:scale-105 transition transform">
+                    Let's Connect ⚡
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. FULL-WIDTH HERO SECTION -->
+    <section id="home" class="pt-24 px-4 md:px-8 max-w-[1550px] mx-auto">
+        <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#180501] via-[#591702] to-[#ea580c] min-h-[85vh] p-8 md:p-14 border border-white/15 shadow-2xl flex flex-col justify-between">
+            
+            <!-- Glows -->
+            <div class="absolute -top-24 -left-24 w-[30rem] h-[30rem] bg-orange-600/30 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-[30rem] h-[30rem] bg-amber-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="relative z-10 flex items-center justify-between mb-6">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-orange-200">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-ping"></span>
+                    Available For Project Collaboration
+                </div>
+            </div>
+
+            <!-- Hero Layout Grid -->
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto">
+                
+                <!-- Left Title -->
+                <div class="lg:col-span-5" data-aos="fade-right">
+                    <h1 class="text-4xl md:text-6xl xl:text-7xl font-black font-space tracking-tight leading-[1.05] text-white mb-6">
+                        Building practical solutions through <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-100 via-amber-200 to-amber-400">hardware & software.</span>
+                    </h1>
+                    <p class="text-base md:text-lg text-white/90 leading-relaxed font-normal max-w-lg">
+                        I'm a <strong class="text-white font-bold">Computer Engineering student</strong> interested in embedded systems, microcontrollers, and web development. I enjoy creating projects that combine electronics, programming, and useful software.
+                    </p>
+                    <div class="flex items-center gap-4 mt-6">
+                        <a href="#projects" class="px-6 py-3 rounded-xl bg-orange-500 font-bold text-white hover:bg-orange-600 transition">View Projects</a>
+                        <a href="#contact" class="px-6 py-3 rounded-xl bg-black/40 border border-white/20 font-bold text-white hover:bg-white hover:text-black transition">Contact Me</a>
+                    </div>
+                </div>
+
+                <!-- Center Large Image -->
+                <div class="lg:col-span-4 flex justify-center py-4" data-aos="zoom-in">
+                    <div class="tilt-card relative w-full max-w-sm h-[28rem] md:h-[32rem] rounded-[2.5rem] p-3 bg-gradient-to-b from-white/20 via-orange-500/20 to-black/80 backdrop-blur-2xl border-2 border-white/20 shadow-2xl group cursor-pointer overflow-hidden">
+                        <div class="w-full h-full rounded-[2rem] overflow-hidden relative">
+                            <img src="profile.jpg" alt="Jerome Opana" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700">
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-6 left-6 right-6 text-center">
+                                <p class="text-white font-extrabold text-2xl font-space">Jerome Opana</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Quote Box -->
+                <div class="lg:col-span-3 text-white/90" data-aos="fade-left">
+                    <div class="p-8 rounded-[2rem] bg-black/45 backdrop-blur-xl border border-white/15 hover:border-orange-500/50 transition duration-300 shadow-xl">
+                        <i data-lucide="sparkles" class="text-amber-400 w-9 h-9 mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-3 font-space text-white leading-snug">Great Design Should Feel Effortless.</h2>
+                        <p class="text-sm text-white/80 leading-relaxed">
+                            From intuitive user interface design to robust code execution, I turn complex concepts into clean, interactive, and responsive web products.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Badges -->
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4 pt-8 border-t border-white/20 mt-8" data-aos="fade-up">
+                <div class="p-5 rounded-2xl bg-black/35 backdrop-blur-md border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition">
+                    <p class="text-xs font-black text-orange-400 tracking-widest uppercase">HARDWARE</p>
+                    <p class="font-bold text-white text-base mt-1">Embedded Systems</p>
+                    <p class="text-gray-400 text-xs mt-1">Programming microcontrollers and processing sensor data using C/C++.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-black/35 backdrop-blur-md border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition">
+                    <p class="text-xs font-black text-orange-400 tracking-widest uppercase">SOFTWARE</p>
+                    <p class="font-bold text-white text-base mt-1">Web Development</p>
+                    <p class="text-gray-400 text-xs mt-1">Building clean, user-friendly interfaces and practical web applications.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-black/35 backdrop-blur-md border border-white/10 hover:border-orange-500/40 hover:bg-orange-500/10 transition">
+                    <p class="text-xs font-black text-orange-400 tracking-widest uppercase">INTEGRATION</p>
+                    <p class="font-bold text-white text-base mt-1">Hardware Integration</p>
+                    <p class="text-gray-400 text-xs mt-1">Connecting physical device outputs to interactive software displays.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. ABOUT SECTION -->
+    <section id="about" class="py-24 max-w-[1550px] mx-auto px-4 md:px-8">
+        <div class="bg-gradient-to-b from-[#130602] to-[#0a0301] rounded-[2.5rem] p-8 md:p-14 border border-white/10 shadow-2xl relative overflow-hidden">
+            
+            <div class="absolute -top-24 -left-24 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12" data-aos="fade-up">
+                <div>
+                    <h2 class="text-4xl md:text-6xl font-black font-space text-white">
+                        Engineering Beyond <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-amber-400">The Screen</span>
+                    </h2>
+                </div>
+                <p class="text-gray-300 max-w-lg text-base md:text-lg leading-relaxed font-normal">
+                    As a Computer Engineering student, my goal is to blend physical electronic devices with responsive web platforms, creating seamless end-to-end technology solutions.
+                </p>
+            </div>
+
+            <!-- 3 Pillar Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-aos="fade-up">
+                
+                <!-- Pillar 1 -->
+                <div class="tilt-card p-8 rounded-3xl bg-gradient-to-b from-orange-950/30 to-black/80 border border-orange-500/30 hover:border-orange-500 transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-orange-400 font-mono-custom font-bold text-sm">01 / HARDWARE</span>
+                            <div class="p-2 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400">
+                                <i data-lucide="cpu" class="w-5 h-5 group-hover:scale-110 transition"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold font-space text-white mb-3">Microcontroller Logic</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Writing efficient C/C++ routines for microcontrollers (ESP32 / Arduino) to collect sensor readings and manage physical hardware inputs.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-orange-500/20 mt-6 flex items-center justify-between text-xs font-mono-custom text-orange-200">
+                        <span>C++ • Sensors • GPIO</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse"></span>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="tilt-card p-8 rounded-3xl bg-gradient-to-b from-amber-950/30 to-black/80 border border-amber-500/30 hover:border-amber-400 transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-amber-400 font-mono-custom font-bold text-sm">02 / SOFTWARE</span>
+                            <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                                <i data-lucide="layout" class="w-5 h-5 group-hover:scale-110 transition"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold font-space text-white mb-3">Modern Web Interfaces</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Crafting clean, responsive frontend web applications with HTML, Tailwind CSS, and JavaScript for optimal user interaction.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-amber-500/20 mt-6 flex items-center justify-between text-xs font-mono-custom text-amber-200">
+                        <span>Tailwind • JS • UI/UX</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="tilt-card p-8 rounded-3xl bg-gradient-to-b from-red-950/30 to-black/80 border border-red-500/30 hover:border-rose-500 transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-rose-400 font-mono-custom font-bold text-sm">03 / INTEGRATION</span>
+                            <div class="p-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
+                                <i data-lucide="wifi" class="w-5 h-5 group-hover:scale-110 transition"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold font-space text-white mb-3">System Bridge</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Connecting physical hardware outputs with web dashboards so user actions translate directly to physical device execution.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-rose-500/20 mt-6 flex items-center justify-between text-xs font-mono-custom text-rose-200">
+                        <span>IoT • Dashboards • APIs</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4. SKILLS SECTION -->
+    <section id="skills" class="py-24 max-w-[1550px] mx-auto px-4 md:px-8">
+        <div class="bg-gradient-to-b from-[#110502] via-[#0d0401] to-[#060302] rounded-[2.5rem] p-8 md:p-14 border border-white/10 shadow-2xl relative overflow-hidden">
+            
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-amber-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+                <span class="text-orange-500 font-mono-custom font-bold uppercase tracking-widest text-xs">TECHNICAL TOOLKIT</span>
+                <h2 class="text-4xl md:text-5xl font-black font-space mt-2">Skills & Technologies</h2>
+                <p class="text-gray-400 text-sm mt-3">Practical tools and engineering technologies I utilize across embedded development and web systems.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-aos="fade-up">
+                
+                <!-- Skill Card 1: Microcontrollers -->
+                <div class="tilt-card p-7 rounded-3xl bg-black/60 border border-white/10 hover:border-orange-500/60 transition duration-300 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 group-hover:scale-110 transition">
+                                <i data-lucide="cpu" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-xs font-mono-custom text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">HARDWARE</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-2">ESP32 & Arduino</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6">Programming microcontrollers, Wi-Fi/Bluetooth modules, GPIO peripherals, and sensor integrations.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-mono-custom text-gray-400">Experience Level</span>
+                        <span class="text-xs font-bold text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">Proficient</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                </div>
+
+                <!-- Skill Card 2: C / C++ -->
+                <div class="tilt-card p-7 rounded-3xl bg-black/60 border border-white/10 hover:border-orange-500/60 transition duration-300 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 group-hover:scale-110 transition">
+                                <i data-lucide="code-2" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-xs font-mono-custom text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">PROGRAMMING</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-2">C / C++</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6">Core language for embedded programming, memory management, and hardware logic execution.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-mono-custom text-gray-400">Experience Level</span>
+                        <span class="text-xs font-bold text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">Intermediate</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                </div>
+
+                <!-- Skill Card 3: Web Stack -->
+                <div class="tilt-card p-7 rounded-3xl bg-black/60 border border-white/10 hover:border-amber-500/60 transition duration-300 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 group-hover:scale-110 transition">
+                                <i data-lucide="globe" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-xs font-mono-custom text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">SOFTWARE</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-2">HTML5 / CSS3 / JS</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6">Building clean semantic web markups, interactive client logic, and responsive web elements.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-mono-custom text-gray-400">Experience Level</span>
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">Advanced</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                </div>
+
+                <!-- Skill Card 4: Tailwind CSS -->
+                <div class="tilt-card p-7 rounded-3xl bg-black/60 border border-white/10 hover:border-amber-500/60 transition duration-300 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 group-hover:scale-110 transition">
+                                <i data-lucide="wind" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-xs font-mono-custom text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">STYLING</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-2">Tailwind CSS</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6">Utility-first CSS framework for creating modern, responsive, and glassmorphic UI designs.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-mono-custom text-gray-400">Experience Level</span>
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">Advanced</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                </div>
+
+                <!-- Skill Card 5: IoT Systems -->
+                <div class="tilt-card p-7 rounded-3xl bg-black/60 border border-white/10 hover:border-rose-500/60 transition duration-300 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 group-hover:scale-110 transition">
+                                <i data-lucide="wifi" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-xs font-mono-custom text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">SYSTEMS</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-2">IoT & Dashboard Sync</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6">Transmitting real-time hardware sensor data to live web interface displays and controllers.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-mono-custom text-gray-400">Experience Level</span>
+                        <span class="text-xs font-bold text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">Proficient</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-rose-500 to-amber-500 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                </div>
+
+                <!-- Skill Card 6: Git & GitHub -->
+                <div class="tilt-card p-7 rounded-3xl bg-black/60 border border-white/10 hover:border-orange-500/60 transition duration-300 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 group-hover:scale-110 transition">
+                                <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                </svg>
+                            </div>
+                            <span class="text-xs font-mono-custom text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">VERSION CONTROL</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-space text-white mb-2">Git & GitHub</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-6">Version management, repository hosting, collaborative workflows, and GitHub Pages deployment.</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-mono-custom text-gray-400">Experience Level</span>
+                        <span class="text-xs font-bold text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">Proficient</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5. PROJECTS SECTION -->
+    <section id="projects" class="py-24 max-w-[1550px] mx-auto px-4 md:px-8 border-t border-white/10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12" data-aos="fade-up">
+            <div>
+                <span class="text-orange-500 font-mono-custom font-bold uppercase tracking-widest text-xs">FEATURED CREATIONS</span>
+                <h2 class="text-4xl md:text-5xl font-black font-space mt-2">Projects Showcase</h2>
+            </div>
+            <p class="text-gray-400 text-sm mt-2 md:mt-0 font-mono-custom">✨ Hover / Click on a card to flip & reveal live specs</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            
+            <!-- PROJECT 1: COEPay -->
+            <div class="flip-card h-[36rem] w-full cursor-pointer" data-aos="fade-up">
+                <div class="flip-card-inner">
+                    
+                    <!-- FRONT SIDE OF CARD 1 -->
+                    <div class="flip-card-front bg-[#0c0502] border border-orange-500/30 overflow-hidden shadow-2xl flex flex-col justify-between">
+                        <div class="h-64 overflow-hidden relative group">
+                            <img src="coepay.png" alt="COEPay ICCT Student Portal" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0c0502] via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-orange-500/80 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full border border-white/20">
+                                ICCT Student Portal
+                            </span>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-3xl font-black font-space text-white">COEPay</h3>
+                                    <span class="text-xs font-mono-custom text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">Finance & Merch</span>
+                                </div>
+                                <p class="text-gray-300 text-sm leading-relaxed mt-2">
+                                    One-stop web management portal for ICCT students, personnel, and admins designed for handling payments, merchandise tracking, and student accounts.
+                                </p>
+                            </div>
+                            <div class="pt-6 border-t border-white/10 flex items-center justify-between text-xs text-orange-300 font-mono-custom">
+                                <span>✦ Hover to Flip Card</span>
+                                <span>See Full Specs →</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BACK SIDE OF CARD 1 -->
+                    <div class="flip-card-back bg-gradient-to-br from-[#1c0802] via-[#0d0401] to-[#050201] border-2 border-orange-500/60 p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-6 border-b border-orange-500/20 pb-4">
+                                <h4 class="text-2xl font-bold font-space text-orange-400">COEPay Platform Specs</h4>
+                                <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-3.5 py-1.5 rounded-full border border-amber-500/20">IN DEVELOPMENT</span>
+                            </div>
+                            
+                            <ul class="space-y-4 text-base text-gray-200 leading-relaxed font-medium mb-6">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-orange-500 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>Centralized Portal:</strong> Unified dashboard built for ICCT Students, Personnel, and System Admins.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-orange-500 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>Payment Management:</strong> Automated tracking of fees, transactions, and real-time ledger updates.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-orange-500 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>Merchandise System:</strong> Integrated catalog, stock allocation, and online order processing.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-orange-500 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>Security Architecture:</strong> Encrypted user authentication and secure session handling.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-white/10">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-semibold bg-orange-500/20 text-orange-300 px-4 py-1.5 rounded-full border border-orange-500/30">HTML5 / CSS3</span>
+                                <span class="text-xs font-semibold bg-orange-500/20 text-orange-300 px-4 py-1.5 rounded-full border border-orange-500/30">JavaScript</span>
+                                <span class="text-xs font-semibold bg-orange-500/20 text-orange-300 px-4 py-1.5 rounded-full border border-orange-500/30">Database Management</span>
+                            </div>
+                            <button onclick="openComingSoonModal()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-sm py-4 rounded-2xl text-center hover:scale-[1.02] transition duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25">
+                                Launch Project Website <i data-lucide="clock" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PROJECT 2: Guro.Co -->
+            <div class="flip-card h-[36rem] w-full cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                <div class="flip-card-inner">
+                    
+                    <!-- FRONT SIDE OF CARD 2 -->
+                    <div class="flip-card-front bg-[#0c0502] border border-amber-500/30 overflow-hidden shadow-2xl flex flex-col justify-between">
+                        <div class="h-64 overflow-hidden relative group">
+                            <img src="guro.png" alt="Guro.Co Academic Suite" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0c0502] via-transparent to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-amber-500/80 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full border border-white/20">
+                                DepEd Academic Suite
+                            </span>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-3xl font-black font-space text-white">Guro.Co</h3>
+                                    <span class="text-xs font-mono-custom text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">EdTech Suite</span>
+                                </div>
+                                <p class="text-gray-300 text-sm leading-relaxed mt-2">
+                                    All-in-one web suite designed for DepEd teachers featuring automated E-Class records, AI quiz generator, class directories, and honors certificate automation.
+                                </p>
+                            </div>
+                            <div class="pt-6 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-mono-custom">
+                                <span>✦ Hover to Flip Card</span>
+                                <span>See Full Specs →</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BACK SIDE OF CARD 2 -->
+                    <div class="flip-card-back bg-gradient-to-br from-[#1a0e02] via-[#0d0401] to-[#050201] border-2 border-amber-500/60 p-8 md:p-10 shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-5 border-b border-amber-500/20 pb-4">
+                                <h4 class="text-2xl font-bold font-space text-amber-400">Guro.Co Platform Features</h4>
+                                <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-3.5 py-1.5 rounded-full border border-amber-500/20">DEPED SUITE</span>
+                            </div>
+                            
+                            <ul class="space-y-3.5 text-base text-gray-200 leading-relaxed font-medium mb-6">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-amber-400 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>Automated E-Class Record:</strong> Real-time grade computations & automatic honors assignment.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-amber-400 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>AI Quiz Maker:</strong> Automated quiz generation by uploading Daily Lesson Logs (DLL).</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-amber-400 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>DepEd Directory & Calendar:</strong> Tracking transfer students with DepEd synced calendars.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-amber-400 font-bold text-lg leading-none">✔</span>
+                                    <span><strong>Honors & Certificate Generator:</strong> Auto-populates certificates based on E-Class records.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-white/10">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-semibold bg-amber-500/20 text-amber-300 px-4 py-1.5 rounded-full border border-amber-500/30">AI Tools</span>
+                                <span class="text-xs font-semibold bg-amber-500/20 text-amber-300 px-4 py-1.5 rounded-full border border-amber-500/30">E-Class Automation</span>
+                                <span class="text-xs font-semibold bg-amber-500/20 text-amber-300 px-4 py-1.5 rounded-full border border-amber-500/30">Web Dashboard</span>
+                            </div>
+                            <a href="https://guro-co.vercel.app/login" target="_blank" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold text-sm py-4 rounded-2xl text-center hover:scale-[1.02] transition duration-300 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25">
+                                Launch Project Website <i data-lucide="external-link" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 6. EDUCATION SECTION -->
+    <section id="education" class="py-24 max-w-7xl mx-auto px-6 border-t border-white/10">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <span class="text-orange-500 font-mono-custom font-bold uppercase tracking-widest text-xs">ACADEMIC JOURNEY</span>
+            <h2 class="text-4xl md:text-5xl font-black font-space mt-2">Education & Timeline</h2>
+            <p class="text-gray-400 text-sm mt-3">My educational background and technical foundation in engineering and visual arts.</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto space-y-10" data-aos="fade-up">
+            
+            <!-- Entry 1: College (ICCT Colleges - Cainta Main Campus) -->
+            <div class="relative pl-8 md:pl-10 border-l-2 border-orange-500/40 ml-4 group">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 bg-[#060302] border-2 border-orange-500 rounded-full group-hover:bg-orange-500 group-hover:scale-125 transition duration-300"></div>
+                <div class="bg-black/60 border border-white/10 p-7 rounded-3xl group-hover:border-orange-500/40 transition duration-300">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span class="text-orange-400 font-bold text-xs tracking-widest font-mono-custom bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">2023 - PRESENT</span>
+                        <span class="text-xs font-mono-custom text-orange-300 font-semibold">ICCT Colleges — Cainta (Main Campus)</span>
+                    </div>
+                    <h3 class="text-2xl font-bold font-space text-white group-hover:text-orange-400 transition">Bachelor of Science in Computer Engineering</h3>
+                    <p class="text-gray-300 text-sm mt-2 leading-relaxed">
+                        Specializing in Embedded Systems, Microcontroller Programming (ESP32/Arduino), C/C++ Development, Hardware-Software Integration, and Interactive Web Applications.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Entry 2: Senior High School (Batasan Hills NHS - Animation Strand) -->
+            <div class="relative pl-8 md:pl-10 border-l-2 border-orange-500/40 ml-4 group">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 bg-[#060302] border-2 border-amber-500 rounded-full group-hover:bg-amber-500 group-hover:scale-125 transition duration-300"></div>
+                <div class="bg-black/60 border border-white/10 p-7 rounded-3xl group-hover:border-amber-500/40 transition duration-300">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span class="text-amber-400 font-bold text-xs tracking-widest font-mono-custom bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">SENIOR HIGH SCHOOL</span>
+                        <span class="text-xs font-mono-custom text-amber-300 font-semibold">Batasan Hills National High School</span>
+                    </div>
+                    <h3 class="text-2xl font-bold font-space text-white group-hover:text-amber-400 transition">TVL Track — Animation Strand</h3>
+                    <p class="text-gray-300 text-sm mt-2 leading-relaxed">
+                        Focused on 2D/3D Animation principles, digital graphics rendering, vector illustration, visual composition, and creative digital media workflows.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 7. CONTACT SECTION (FIXED FACEBOOK SVG & WORKING EMAIL SENDER) -->
+    <section id="contact" class="py-24 max-w-[1550px] mx-auto px-4 md:px-8 border-t border-white/10">
+        <div class="bg-gradient-to-b from-[#130602] via-[#0b0401] to-[#050201] rounded-[2.5rem] p-8 md:p-14 border border-white/10 shadow-2xl relative overflow-hidden">
+            
+            <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-2xl mb-12" data-aos="fade-up">
+                <span class="text-orange-500 font-mono-custom font-bold uppercase tracking-widest text-xs">DIRECT COMMUNICATION</span>
+                <h2 class="text-4xl md:text-6xl font-black font-space text-white mt-2">
+                    Let's Connect & <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-amber-500">Collaborate</span>
+                </h2>
+                <p class="text-gray-300 text-sm md:text-base mt-3 leading-relaxed">
+                    Interested in hardware-software integration, web development, or engineering projects? Reach out through any channel below.
+                </p>
+            </div>
+
+            <!-- TOP FULL-WIDTH HORIZONTAL QUICK CONNECT STRIP -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+                
+                <!-- Channel 1: Email -->
+                <a href="mailto:jerome.opana@email.com" class="p-5 rounded-2xl bg-black/60 border border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 transition duration-300 group flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-orange-500/15 border border-orange-500/30 text-orange-400 group-hover:scale-110 transition">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-[10px] font-mono-custom text-gray-400 uppercase tracking-wider">PRIMARY EMAIL</p>
+                        <p class="text-xs font-bold text-white group-hover:text-orange-400 transition truncate">jerome.opana@email.com</p>
+                    </div>
+                </a>
+
+                <!-- Channel 2: Location -->
+                <div class="p-5 rounded-2xl bg-black/60 border border-white/10 flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-orange-500/15 border border-orange-500/30 text-orange-400">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-mono-custom text-gray-400 uppercase tracking-wider">LOCATION</p>
+                        <p class="text-xs font-bold text-white">Quezon City, PH 🇵🇭</p>
+                    </div>
+                </div>
+
+                <!-- Channel 3: GitHub -->
+                <a href="https://github.com/P3ACHMANGOPIEE3" target="_blank" class="p-5 rounded-2xl bg-black/60 border border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 transition duration-300 group flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-orange-500/15 border border-orange-500/30 text-orange-400 group-hover:scale-110 transition">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-mono-custom text-gray-400 uppercase tracking-wider">GITHUB PROFILE</p>
+                        <p class="text-xs font-bold text-white group-hover:text-orange-400 transition">P3ACHMANGOPIEE3</p>
+                    </div>
+                </a>
+
+                <!-- Channel 4: Facebook (FIXED HIGH-RES SVG ICON) -->
+                <a href="https://www.facebook.com/romejernzxc/" target="_blank" class="p-5 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10 transition duration-300 group flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 group-hover:scale-110 transition">
+                        <svg class="w-5 h-5 fill-current text-amber-400" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-mono-custom text-gray-400 uppercase tracking-wider">FACEBOOK PROFILE</p>
+                        <p class="text-xs font-bold text-white group-hover:text-amber-400 transition">Jerome Opana</p>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- BOTTOM SINGLE-BOX INTERACTIVE MESSAGE CONSOLE (SENDS DIRECTLY TO EMAIL) -->
+            <div class="bg-black/60 border border-white/10 p-8 rounded-3xl" data-aos="fade-up">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                    <h3 class="text-2xl font-bold font-space text-white">Send Direct Inquiry</h3>
+                    <span class="text-xs font-mono-custom text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">QUICK TERMINAL</span>
+                </div>
+
+                <form id="contactForm" onsubmit="sendEmail(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono-custom text-gray-300 uppercase mb-2">Sender Name</label>
+                            <input id="senderName" type="text" required placeholder="Full Name" class="w-full bg-white/5 border border-white/15 rounded-2xl px-5 py-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono-custom text-gray-300 uppercase mb-2">Sender Email</label>
+                            <input id="senderEmail" type="email" required placeholder="Email Address" class="w-full bg-white/5 border border-white/15 rounded-2xl px-5 py-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono-custom text-gray-300 uppercase mb-2">Message Payload</label>
+                        <textarea id="senderMessage" rows="4" required placeholder="Describe your project requirements, collaboration idea, or inquiry..." class="w-full bg-white/5 border border-white/15 rounded-2xl px-5 py-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white font-bold text-sm py-4 rounded-2xl hover:scale-[1.01] transition duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25">
+                        Transmit Message <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 text-center text-gray-500 text-sm border-t border-white/5">
+        <p>© 2026 Jerome Opana. All Rights Reserved.</p>
+    </footer>
+
+    <!-- JS SCRIPTS -->
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 800, once: true });
+
+        // Smooth 3D Tilt
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+            max: 6,
+            speed: 500,
+            glare: true,
+            "max-glare": 0.15
+        });
+
+        // COMING SOON MODAL CONTROLLER FOR COEPay
+        function openComingSoonModal() {
+            document.getElementById('comingSoonModal').classList.remove('hidden');
+        }
+        function closeComingSoonModal() {
+            document.getElementById('comingSoonModal').classList.add('hidden');
+        }
+
+        // DIRECT EMAIL SENDER FUNCTION
+        function sendEmail(event) {
+            event.preventDefault();
+            const name = document.getElementById('senderName').value;
+            const email = document.getElementById('senderEmail').value;
+            const message = document.getElementById('senderMessage').value;
+
+            const mailtoLink = `mailto:jerome.opana@email.com?subject=Portfolio Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent("Sender Name: " + name + "\nSender Email: " + email + "\n\nMessage:\n" + message)}`;
+            
+            window.location.href = mailtoLink;
+        }
+
+        // ----------------------------------------------------
+        // SUPER SMOOTH SMOKE TRAIL
+        // ----------------------------------------------------
+        const canvas = document.getElementById("smokeCanvas");
+        const ctx = canvas.getContext("2d");
+        const pointerDot = document.getElementById("custom-cursor-dot");
+
+        let particles = [];
+        const maxParticles = 90;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+
+        let mouse = { x: -100, y: -100, px: -100, py: -100 };
+
+        window.addEventListener("mousemove", (e) => {
+            mouse.px = mouse.x;
+            mouse.py = mouse.y;
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+
+            pointerDot.style.left = mouse.x + 'px';
+            pointerDot.style.top = mouse.y + 'px';
+
+            const velocity = Math.hypot(mouse.x - mouse.px, mouse.y - mouse.py);
+            const count = Math.min(8, Math.floor(velocity / 3));
+
+            for (let i = 0; i < count; i++) {
+                if (particles.length < maxParticles) {
+                    particles.push(new SmokeParticle(mouse.x, mouse.y));
+                }
+            }
+        });
+
+        class SmokeParticle {
+            constructor(x, y) {
+                this.x = x + (Math.random() - 0.5) * 12;
+                this.y = y + (Math.random() - 0.5) * 12;
+                
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.7) * 1.8;
+
+                this.baseSize = Math.random() * 25 + 15;
+                this.size = this.baseSize;
+                
+                this.maxLife = Math.random() * 35 + 30;
+                this.life = this.maxLife;
+
+                const colors = [
+                    "rgba(234, 88, 12,",   // orange
+                    "rgba(249, 115, 22,",  // amber-orange
+                    "rgba(220, 38, 38,",   // red
+                    "rgba(245, 158, 11,"   // gold
+                ];
+                this.colorBase = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                this.size += 0.45;
+                this.life--;
+            }
+
+            draw() {
+                const progress = this.life / this.maxLife;
+                const opacity = progress * 0.35;
+
+                const grad = ctx.createRadialGradient(
+                    this.x, this.y, 0, 
+                    this.x, this.y, this.size
+                );
+                
+                grad.addColorStop(0, `${this.colorBase}${opacity})`);
+                grad.addColorStop(0.5, `${this.colorBase}${opacity * 0.4})`);
+                grad.addColorStop(1, `rgba(0,0,0,0)`);
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
